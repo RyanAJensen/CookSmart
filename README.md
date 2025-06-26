@@ -1,6 +1,6 @@
 # 🧠 CookSmart
 
-A comprehensive mobile application built with React Native and Expo that empowers users to manage their kitchen pantry, track nutritional intake, and discover recipes based on ingredients they already own. This project blends intuitive user experience with intelligent food data handling to promote sustainability, healthier eating, and efficient meal planning.
+A comprehensive, AI developed mobile application built with React Native and Expo that empowers users to manage their kitchen pantry, track nutritional intake, and discover recipes based on ingredients they already own. This project blends intuitive user experience with intelligent food data handling to promote sustainability, healthier eating, and efficient meal planning.
 
 ---
 

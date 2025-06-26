@@ -156,4 +156,9 @@ export const getAllIngredients = async (): Promise<Ingredient[]> => {
   return await database.getAllAsync<Ingredient>(
     'SELECT * FROM ingredients ORDER BY name ASC'
   );
+};
+
+export const clearIngredients = async (): Promise<void> => {
+  const database = getDatabase();
+  await database.runAsync('DELETE FROM ingredients');
 }; 

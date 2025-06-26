@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
 import { TextInput, Button, Text, Card, IconButton, useTheme } from 'react-native-paper';
 import { router, useRouter, useLocalSearchParams } from 'expo-router';
-import { searchCommonIngredients } from '../../services/commonIngredients';
+import { commonIngredients } from '../../services/commonIngredients';
 import { addIngredient } from '../../services/storage';
 import { Ingredient } from '../../types';
 import AddCustomIngredient from '../../components/AddCustomIngredient';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { TextInput as RNTextInput } from 'react-native';
 
 export default function TypeIngredientScreen() {
   const [ingredientName, setIngredientName] = useState('');
@@ -16,12 +17,18 @@ export default function TypeIngredientScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const returnTo = params.returnTo as string;
+  const textInputRef = useRef<RNTextInput>(null);
 
-  const handleSearch = async (text: string) => {
+  const handleSearch = (text: string) => {
     setIngredientName(text);
     if (text.trim()) {
-      const results = await searchCommonIngredients(text);
-      setSearchResults(results);
+      const lower = text.toLowerCase();
+      const results = commonIngredients.filter(ing =>
+        ing.name.toLowerCase().includes(lower) ||
+        (ing.common_names && ing.common_names.toLowerCase().includes(lower))
+      );
+      const uniqueResults = Array.from(new Map(results.map(ing => [ing.id, ing])).values());
+      setSearchResults(uniqueResults);
     } else {
       setSearchResults([]);
     }
@@ -29,13 +36,13 @@ export default function TypeIngredientScreen() {
 
   const handleSelectIngredient = async (ingredient: Ingredient) => {
     try {
-      console.log('Adding ingredient:', ingredient);
       const formattedIngredient: Ingredient = {
         ...ingredient,
+        id: `${ingredient.id}-${Date.now()}`,
+        count: 1,
         added_at: new Date().toISOString()
       };
       await addIngredient(formattedIngredient);
-      console.log('Added ingredient:', formattedIngredient);
       router.back();
     } catch (error) {
       console.error('Error adding ingredient:', error);
@@ -55,7 +62,13 @@ export default function TypeIngredientScreen() {
       key={ingredient.id} 
       style={styles.card}
       mode="outlined"
-      onPress={() => handleSelectIngredient(ingredient)}
+      onPress={() => {
+        textInputRef.current?.blur();
+        router.push({
+          pathname: '/(modals)/food-details',
+          params: { ingredient: JSON.stringify(ingredient) }
+        });
+      }}
     >
       <Card.Content>
         <View style={styles.ingredientHeader}>
@@ -111,14 +124,17 @@ export default function TypeIngredientScreen() {
           label="Search ingredients"
           value={ingredientName}
           onChangeText={handleSearch}
-          style={styles.searchInput}
+          style={[styles.searchInput, { color: '#111' }]}
           autoFocus
+          ref={textInputRef}
+          render={props => <RNTextInput {...props} ref={textInputRef} style={[props.style, { color: '#111' }]} />}
         />
       </View>
 
       <ScrollView 
         style={styles.content}
         contentContainerStyle={styles.contentContainer}
+        keyboardShouldPersistTaps="handled"
       >
         {searchResults.length > 0 ? (
           searchResults.map(renderIngredient)

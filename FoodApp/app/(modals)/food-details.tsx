@@ -41,7 +41,7 @@ export default function FoodDetailsScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const returnTo = params.returnTo as string;
-  const { barcode } = params;
+  const { barcode, ingredient: ingredientParam } = params;
 
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<any>(null);
@@ -50,7 +50,18 @@ export default function FoodDetailsScreen() {
   const [added, setAdded] = useState(false);
 
   useEffect(() => {
-    if (barcode) {
+    let ingredientStr: string | undefined = undefined;
+    if (ingredientParam) {
+      if (Array.isArray(ingredientParam)) {
+        ingredientStr = ingredientParam[0];
+      } else {
+        ingredientStr = ingredientParam;
+      }
+    }
+    if (ingredientStr) {
+      setProduct(JSON.parse(ingredientStr));
+      setLoading(false);
+    } else if (barcode) {
       setLoading(true);
       getProductByBarcode(barcode as string)
         .then((prod) => {
@@ -62,7 +73,7 @@ export default function FoodDetailsScreen() {
           setLoading(false);
         });
     }
-  }, [barcode]);
+  }, [barcode, ingredientParam]);
 
   const handleBack = () => {
     if (returnTo) {
@@ -75,6 +86,29 @@ export default function FoodDetailsScreen() {
   const handleAdd = async () => {
     if (!product) return;
     setAdding(true);
+    let ingredientStr: string | undefined = undefined;
+    if (ingredientParam) {
+      if (Array.isArray(ingredientParam)) {
+        ingredientStr = ingredientParam[0];
+      } else {
+        ingredientStr = ingredientParam;
+      }
+    }
+    if (ingredientStr) {
+      const ingredient: Ingredient = {
+        ...product,
+        id: `${product.id}-${Date.now()}`,
+        count: 1,
+        added_at: new Date().toISOString(),
+      };
+      await addIngredient(ingredient);
+      setAdding(false);
+      setAdded(true);
+      setTimeout(() => {
+        router.back();
+      }, 1000);
+      return;
+    }
     // Nutrition helpers for numbers
     const nutriments = product.nutriments || {};
     // Determine nutrition basis and label
@@ -167,9 +201,7 @@ export default function FoodDetailsScreen() {
       serving_unit: servingUnit,
       added_at: new Date().toISOString(),
     };
-    console.log('Adding ingredient to pantry:', ingredient);
     await addIngredient(ingredient);
-    console.log('Ingredient added, navigating back and expecting pantry to reload.');
     setAdding(false);
     setAdded(true);
     setTimeout(() => {
@@ -177,33 +209,50 @@ export default function FoodDetailsScreen() {
     }, 1000);
   };
 
-  // Use the same nutrition values for display as for storage
-  let displayCalories = 0, displayProtein = 0, displayCarbs = 0, displayFat = 0;
-  if (product && product.nutriments) {
-    const nutriments = product.nutriments;
-    if (nutriments['energy-kcal_serving'] != null) {
-      displayCalories = Math.round(nutriments['energy-kcal_serving']);
-    } else if (nutriments['energy-kcal_100g'] != null) {
-      displayCalories = Math.round(nutriments['energy-kcal_100g']);
-    } else if (nutriments['energy_serving'] != null) {
-      displayCalories = Math.round(nutriments['energy_serving'] / 4.184);
-    } else if (nutriments['energy_100g'] != null) {
-      displayCalories = Math.round(nutriments['energy_100g'] / 4.184);
-    }
-    if (nutriments['proteins_serving'] != null) {
-      displayProtein = Math.round(nutriments['proteins_serving'] * 10) / 10;
-    } else if (nutriments['proteins_100g'] != null) {
-      displayProtein = Math.round(nutriments['proteins_100g'] * 10) / 10;
-    }
-    if (nutriments['carbohydrates_serving'] != null) {
-      displayCarbs = Math.round(nutriments['carbohydrates_serving'] * 10) / 10;
-    } else if (nutriments['carbohydrates_100g'] != null) {
-      displayCarbs = Math.round(nutriments['carbohydrates_100g'] * 10) / 10;
-    }
-    if (nutriments['fat_serving'] != null) {
-      displayFat = Math.round(nutriments['fat_serving'] * 10) / 10;
-    } else if (nutriments['fat_100g'] != null) {
-      displayFat = Math.round(nutriments['fat_100g'] * 10) / 10;
+  // Use the correct display values for searched (ingredientParam) vs scanned (barcode) items
+  let displayCalories = 0, displayProtein = 0, displayCarbs = 0, displayFat = 0, displayServing = '', displayCategory = '', displayName = '', displayUnit = '';
+  if (product) {
+    if (ingredientParam) {
+      // Searched ingredient: use fields directly
+      displayCalories = product.calories;
+      displayProtein = product.protein;
+      displayCarbs = product.carbs;
+      displayFat = product.fat;
+      displayServing = product.serving_size;
+      displayUnit = product.serving_unit;
+      displayCategory = product.category;
+      displayName = product.name;
+    } else if (product.nutriments) {
+      // Scanned product: derive from nutriments
+      const nutriments = product.nutriments;
+      if (nutriments['energy-kcal_serving'] != null) {
+        displayCalories = Math.round(nutriments['energy-kcal_serving']);
+      } else if (nutriments['energy-kcal_100g'] != null) {
+        displayCalories = Math.round(nutriments['energy-kcal_100g']);
+      } else if (nutriments['energy_serving'] != null) {
+        displayCalories = Math.round(nutriments['energy_serving'] / 4.184);
+      } else if (nutriments['energy_100g'] != null) {
+        displayCalories = Math.round(nutriments['energy_100g'] / 4.184);
+      }
+      if (nutriments['proteins_serving'] != null) {
+        displayProtein = Math.round(nutriments['proteins_serving'] * 10) / 10;
+      } else if (nutriments['proteins_100g'] != null) {
+        displayProtein = Math.round(nutriments['proteins_100g'] * 10) / 10;
+      }
+      if (nutriments['carbohydrates_serving'] != null) {
+        displayCarbs = Math.round(nutriments['carbohydrates_serving'] * 10) / 10;
+      } else if (nutriments['carbohydrates_100g'] != null) {
+        displayCarbs = Math.round(nutriments['carbohydrates_100g'] * 10) / 10;
+      }
+      if (nutriments['fat_serving'] != null) {
+        displayFat = Math.round(nutriments['fat_serving'] * 10) / 10;
+      } else if (nutriments['fat_100g'] != null) {
+        displayFat = Math.round(nutriments['fat_100g'] * 10) / 10;
+      }
+      displayServing = product.serving_size;
+      displayUnit = product.serving_unit || '';
+      displayCategory = product.categories || '';
+      displayName = normalizeIngredientName(product);
     }
   }
 
@@ -234,11 +283,11 @@ export default function FoodDetailsScreen() {
               <View style={[styles.image, styles.imagePlaceholder]}><Text>No Image</Text></View>
             )}
             <Card.Content>
-              <Text variant="titleLarge" style={styles.productName}>{normalizeIngredientName(product)}</Text>
-              <Text style={styles.category}>{product.categories || 'Unknown Category'}</Text>
+              <Text variant="titleLarge" style={styles.productName}>{displayName}</Text>
+              <Text style={styles.category}>{displayCategory || 'Unknown Category'}</Text>
               <Divider style={{ marginVertical: 12 }} />
               <Text variant="titleMedium" style={styles.nutritionTitle}>
-                Nutrition {product.serving_size ? `(per ${product.serving_size})` : '(per serving)'}
+                Nutrition {(displayServing && displayUnit) ? `(per ${displayServing} ${displayUnit})` : '(per serving)'}
               </Text>
               <View style={styles.nutritionBox}>
                 <View style={styles.nutritionRow}>

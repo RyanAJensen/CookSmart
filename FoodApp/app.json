@@ -1,17 +1,17 @@
 {
   "expo": {
-    "name": "FoodApp",
-    "slug": "FoodApp",
+    "name": "CookSmart",
+    "slug": "cooksmart",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "foodapp",
+    "scheme": "cooksmart",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "jsEngine": "jsc",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.FoodApp",
+      "bundleIdentifier": "com.anonymous.CookSmart",
       "jsEngine": "jsc"
     },
     "android": {

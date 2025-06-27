@@ -9,7 +9,7 @@ export default function Page() {
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.header}>
         <Text variant="displaySmall" style={[styles.title, { color: theme.colors.primary }]}>
-          Scan & Cook
+          CookSmart
         </Text>
         <Text variant="bodyLarge" style={[styles.subtitle, { color: theme.colors.onSurface }]}>
           Your personal pantry assistant
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     padding: 24,
-    paddingTop: 48,
+    paddingTop: 80,
   },
   title: {
     fontWeight: 'bold',

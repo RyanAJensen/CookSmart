@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.foodapp'
+    namespace 'com.anonymous.cooksmart'
     defaultConfig {
-        applicationId 'com.anonymous.foodapp'
+        applicationId 'com.anonymous.cooksmart'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

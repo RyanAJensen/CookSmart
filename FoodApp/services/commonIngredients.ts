@@ -426,8 +426,8 @@ export const commonIngredients: CommonIngredient[] = [
 // Initialize database with common ingredients
 export const initializeCommonIngredients = async () => {
   try {
-    await clearIngredients();
     await initDatabase();
+    await clearIngredients();
     
     // Add all common ingredients if they don't exist
     const initialIngredients: Ingredient[] = commonIngredients;

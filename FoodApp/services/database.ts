@@ -32,10 +32,13 @@ export const initDatabase = async (): Promise<void> => {
   try {
     db = await openDatabaseAsync('foodapp.db');
     
-    // Create table if it doesn't exist
+    // Drop and recreate table to ensure clean schema
+    await db.execAsync('DROP TABLE IF EXISTS ingredients;');
+    
+    // Create table with correct schema
     await db.execAsync(`
-      CREATE TABLE IF NOT EXISTS ingredients (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+      CREATE TABLE ingredients (
+        id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         category TEXT,
         calories INTEGER,
@@ -44,6 +47,8 @@ export const initDatabase = async (): Promise<void> => {
         fat REAL,
         serving_size REAL,
         serving_unit TEXT,
+        common_names TEXT,
+        added_at TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
     `);
@@ -51,6 +56,13 @@ export const initDatabase = async (): Promise<void> => {
     // Add migration to add common_names column if it doesn't exist
     try {
       await db.execAsync('ALTER TABLE ingredients ADD COLUMN common_names TEXT;');
+    } catch (e) {
+      // Ignore error if column already exists
+    }
+
+    // Add migration to add added_at column if it doesn't exist
+    try {
+      await db.execAsync('ALTER TABLE ingredients ADD COLUMN added_at TEXT;');
     } catch (e) {
       // Ignore error if column already exists
     }
@@ -76,10 +88,11 @@ export const addIngredient = async (ingredient: Ingredient): Promise<void> => {
   const database = getDatabase();
   await database.runAsync(
     `INSERT INTO ingredients (
-      name, category, calories, protein, carbs, fat, 
-      serving_size, serving_unit, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      id, name, category, calories, protein, carbs, fat, 
+      serving_size, serving_unit, common_names, added_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
+      ingredient.id,
       ingredient.name,
       ingredient.category,
       ingredient.calories,
@@ -88,6 +101,7 @@ export const addIngredient = async (ingredient: Ingredient): Promise<void> => {
       ingredient.fat,
       ingredient.serving_size,
       ingredient.serving_unit,
+      ingredient.common_names || '',
       ingredient.added_at
     ]
   );

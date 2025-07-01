@@ -1,9 +1,10 @@
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, View } from 'react-native';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
 import { initializeCommonIngredients } from '../services/commonIngredients';
 import { initDatabase } from '../services/database';
+import CustomTabBar from '../components/CustomTabBar';
 
 const lightTheme = {
   ...MD3LightTheme,
@@ -37,28 +38,31 @@ export default function Layout() {
 
   return (
     <PaperProvider theme={theme}>
-      <Stack>
-        <Stack.Screen 
-          name="(tabs)" 
-          options={{ 
-            headerShown: false,
-            animation: 'none'
-          }} 
-        />
-        <Stack.Screen 
-          name="(modals)" 
-          options={{ 
-            presentation: 'modal',
-            headerShown: false
-          }} 
-        />
-        <Stack.Screen 
-          name="recipes" 
-          options={{ 
-            headerShown: false
-          }} 
-        />
-      </Stack>
+      <View style={{ flex: 1 }}>
+        <Stack>
+          <Stack.Screen 
+            name="(tabs)" 
+            options={{ 
+              headerShown: false,
+              animation: 'none'
+            }} 
+          />
+          <Stack.Screen 
+            name="(modals)" 
+            options={{ 
+              presentation: 'modal',
+              headerShown: false
+            }} 
+          />
+          <Stack.Screen 
+            name="recipes" 
+            options={{ 
+              headerShown: false
+            }} 
+          />
+        </Stack>
+        <CustomTabBar />
+      </View>
     </PaperProvider>
   );
 }

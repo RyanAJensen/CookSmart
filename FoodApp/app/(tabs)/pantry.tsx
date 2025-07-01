@@ -1,10 +1,11 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { ScrollView, StyleSheet, View, Alert, KeyboardAvoidingView, Platform } from 'react-native';
-import { Card, Text, Button, IconButton } from 'react-native-paper';
+import { Card, Text, Button, IconButton, Menu } from 'react-native-paper';
 import { TextInput as RNTextInput } from 'react-native';
 import { getIngredients, saveIngredients, removeIngredient } from '../../services/storage';
 import { Ingredient } from '../../types';
 import { useFocusEffect } from '@react-navigation/native';
+import { router } from 'expo-router';
 
 export default function PantryScreen() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
@@ -16,6 +17,7 @@ export default function PantryScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
   const cardPositions = useRef<Record<string, number>>({});
   const textInputRef = useRef<RNTextInput>(null);
+  const [menuVisible, setMenuVisible] = useState(false);
 
   // Reload ingredients every time the screen is focused
   useFocusEffect(
@@ -190,10 +192,39 @@ export default function PantryScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={0}
     >
-      <View style={styles.header}>
+      <View style={[styles.header, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}> 
         <Text variant="headlineMedium" style={styles.title}>
           My Pantry
         </Text>
+        <Menu
+          visible={menuVisible}
+          onDismiss={() => setMenuVisible(false)}
+          anchor={
+            <Button
+              mode="contained"
+              icon="chef-hat"
+              onPress={() => setMenuVisible(true)}
+              style={{ borderRadius: 8 }}
+            >
+              Find Recipes
+            </Button>
+          }
+        >
+          <Menu.Item
+            onPress={() => {
+              setMenuVisible(false);
+              router.push('/recipes?mode=strict');
+            }}
+            title="Strict (All Ingredients)"
+          />
+          <Menu.Item
+            onPress={() => {
+              setMenuVisible(false);
+              router.push('/recipes?mode=partial');
+            }}
+            title="Partial (Some Ingredients)"
+          />
+        </Menu>
       </View>
 
       <ScrollView 

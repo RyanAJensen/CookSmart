@@ -25,16 +25,15 @@ export default function AIRecipeSettingsScreen() {
         </Text>
       </View>
 
-      <ScrollView 
+      <View 
         style={[styles.content, { backgroundColor: theme.colors.background }]}
-        contentContainerStyle={styles.contentContainer}
       >
         <Card style={[styles.comingSoonCard, { backgroundColor: theme.colors.surface }]} mode="outlined">
           <Card.Content style={styles.comingSoonContent}>
             <View style={styles.iconContainer}>
               <IconButton 
                 icon="robot" 
-                size={64} 
+                size={48} 
                 iconColor={theme.colors.primary}
                 style={[styles.aiIcon, { backgroundColor: theme.colors.primaryContainer }]}
               />
@@ -84,7 +83,7 @@ export default function AIRecipeSettingsScreen() {
             </Button>
           </Card.Content>
         </Card>
-      </ScrollView>
+      </View>
     </View>
   );
 }
@@ -119,13 +118,12 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontWeight: '700',
-    paddingLeft: 80,
-    paddingRight: 20,
+    paddingLeft: 0,
+    paddingRight: 0,
   },
   content: {
     flex: 1,
-  },
-  contentContainer: {
+    justifyContent: 'center',
     padding: 24,
   },
   comingSoonCard: {
@@ -137,39 +135,39 @@ const styles = StyleSheet.create({
   },
   comingSoonContent: {
     alignItems: 'center',
-    padding: 24,
+    padding: 20,
   },
   iconContainer: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   aiIcon: {
     borderRadius: 50,
   },
   comingSoonTitle: {
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: 6,
     textAlign: 'center',
   },
   comingSoonSubtitle: {
     fontWeight: '600',
-    marginBottom: 24,
+    marginBottom: 16,
     textAlign: 'center',
   },
   comingSoonDescription: {
     textAlign: 'center',
-    lineHeight: 24,
-    marginBottom: 24,
+    lineHeight: 20,
+    marginBottom: 16,
   },
   featuresList: {
     alignSelf: 'stretch',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   featureItem: {
-    marginBottom: 8,
+    marginBottom: 6,
     paddingLeft: 8,
   },
   goBackButton: {
-    marginTop: 16,
+    marginTop: 12,
     paddingHorizontal: 32,
   },
 }); 

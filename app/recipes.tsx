@@ -23,31 +23,32 @@ function safeParseJSON(data: any) {
 }
 
 function renderField(field: any, styles: any) {
+  const theme = styles.theme;
   if (Array.isArray(field) && field.length > 0) {
     return field.map((item, idx) => {
       if (typeof item === 'object' && item !== null && 'name' in item) {
         // Nicely format ingredient objects
         return (
-          <Text key={idx} variant="bodyMedium" style={styles.ingredientText}>
+          <Text key={idx} variant="bodyMedium" style={[styles.ingredientText, { color: theme.colors.onSurfaceVariant }]}>
             • {item.name}{item.amount ? `: ${item.amount}` : ''}{item.unit ? ` ${item.unit}` : ''}
           </Text>
         );
       }
       return (
-        <Text key={idx} variant="bodyMedium" style={styles.ingredientText}>
+        <Text key={idx} variant="bodyMedium" style={[styles.ingredientText, { color: theme.colors.onSurfaceVariant }]}>
           {typeof item === 'object' ? JSON.stringify(item) : String(item)}
         </Text>
       );
     });
   } else if (typeof field === 'object' && field !== null) {
     return (
-      <Text variant="bodyMedium" style={styles.ingredientText}>
+      <Text variant="bodyMedium" style={[styles.ingredientText, { color: theme.colors.onSurfaceVariant }]}>
         {JSON.stringify(field)}
       </Text>
     );
   } else if (typeof field === 'string') {
     return (
-      <Text variant="bodyMedium" style={styles.ingredientText}>
+      <Text variant="bodyMedium" style={[styles.ingredientText, { color: theme.colors.onSurfaceVariant }]}>
         {field}
       </Text>
     );
@@ -125,13 +126,30 @@ export default function RecipesScreen() {
     const isComingSoon = (recipe as any).isComingSoon;
 
     return (
-      <Card key={recipe.id} style={[styles.recipeCard, isComingSoon && styles.comingSoonCard]} mode="outlined" onPress={() => router.push({ pathname: '/recipe-detail', params: { recipe: JSON.stringify(recipe) } })}>
+      <Card 
+        key={recipe.id} 
+        style={[
+          styles.recipeCard, 
+          { backgroundColor: theme.colors.surface },
+          isComingSoon && styles.comingSoonCard
+        ]} 
+        mode="outlined" 
+        onPress={() => router.push({ pathname: '/recipe-detail', params: { recipe: JSON.stringify(recipe) } })}
+      >
         <Card.Content>
           <View style={styles.recipeHeader}>
-            <Text variant="titleMedium" style={[styles.recipeTitle, isComingSoon && styles.comingSoonTitle]}>{recipe.title}</Text>
+            <Text variant="titleMedium" style={[
+              styles.recipeTitle, 
+              { color: theme.colors.onSurface },
+              isComingSoon && styles.comingSoonTitle
+            ]}>
+              {recipe.title}
+            </Text>
             {recipe.confidenceScore !== undefined && !isComingSoon && (
-              <View style={styles.confidenceContainer}>
-                <Text style={styles.confidenceText}>AI Confidence: {recipe.confidenceScore}/100</Text>
+              <View style={[styles.confidenceContainer, { backgroundColor: theme.colors.primary }]}>
+                <Text style={[styles.confidenceText, { color: theme.colors.onPrimary }]}>
+                  AI Confidence: {recipe.confidenceScore}/100
+                </Text>
               </View>
             )}
           </View>
@@ -139,40 +157,46 @@ export default function RecipesScreen() {
           {!isComingSoon && (
             <>
               <View style={styles.recipeInfo}>
-                <Text variant="bodyMedium" style={styles.recipeDetail}>{recipe.readyInMinutes} mins</Text>
-                <Text variant="bodyMedium" style={styles.recipeDetail}>{recipe.servings} servings</Text>
+                <Text variant="bodyMedium" style={[styles.recipeDetail, { color: theme.colors.onSurfaceVariant }]}>
+                  {recipe.readyInMinutes} mins
+                </Text>
+                <Text variant="bodyMedium" style={[styles.recipeDetail, { color: theme.colors.onSurfaceVariant }]}>
+                  {recipe.servings} servings
+                </Text>
               </View>
               {recipe.calories && (
-                <View style={styles.recipeNutrition}>
-                  <Text variant="bodyMedium" style={styles.nutritionText}>
+                <View style={[styles.recipeNutrition, { backgroundColor: theme.colors.surfaceVariant }]}>
+                  <Text variant="bodyMedium" style={[styles.nutritionText, { color: theme.colors.onSurfaceVariant }]}>
                     Calories: {recipe.calories}
                   </Text>
-                  <Text variant="bodyMedium" style={styles.nutritionText}>
+                  <Text variant="bodyMedium" style={[styles.nutritionText, { color: theme.colors.onSurfaceVariant }]}>
                     Protein: {recipe.protein || 0}g
                   </Text>
-                  <Text variant="bodyMedium" style={styles.nutritionText}>
+                  <Text variant="bodyMedium" style={[styles.nutritionText, { color: theme.colors.onSurfaceVariant }]}>
                     Carbs: {recipe.carbs || 0}g
                   </Text>
-                  <Text variant="bodyMedium" style={styles.nutritionText}>
+                  <Text variant="bodyMedium" style={[styles.nutritionText, { color: theme.colors.onSurfaceVariant }]}>
                     Fat: {recipe.fat || 0}g
                   </Text>
                 </View>
               )}
               <View style={styles.recipeIngredients}>
-                <Text variant="bodyMedium" style={styles.ingredientsTitle}>Ingredients:</Text>
-                {renderField(ingredients, styles)}
+                <Text variant="bodyMedium" style={[styles.ingredientsTitle, { color: theme.colors.onSurface }]}>
+                  Ingredients:
+                </Text>
+                {renderField(ingredients, { ...styles, theme })}
               </View>
             </>
           )}
           
-          <View style={styles.viewRecipeContainer}>
-            <Text variant="bodyMedium" style={styles.viewRecipeText}>
+          <View style={[styles.viewRecipeContainer, { borderTopColor: theme.colors.outline }]}>
+            <Text variant="bodyMedium" style={[styles.viewRecipeText, { color: theme.colors.primary }]}>
               {isComingSoon ? 'Tap to learn more' : 'Tap to view full recipe'}
             </Text>
             <IconButton
               icon="chevron-right"
               size={16}
-              iconColor="#1976D2"
+              iconColor={theme.colors.primary}
               style={styles.viewRecipeIcon}
             />
           </View>
@@ -180,14 +204,18 @@ export default function RecipesScreen() {
           {!isComingSoon && (
             <>
               <View style={{ marginTop: 12 }}>
-                <Text variant="bodyMedium" style={styles.ingredientsTitle}>Instructions:</Text>
-                {renderField(instructions, styles)}
+                <Text variant="bodyMedium" style={[styles.ingredientsTitle, { color: theme.colors.onSurface }]}>
+                  Instructions:
+                </Text>
+                {renderField(instructions, { ...styles, theme })}
               </View>
               {recipe.missingIngredients && recipe.missingIngredients.length > 0 && (
-                <View style={styles.missingIngredientsContainer}>
-                  <Text variant="bodyMedium" style={styles.missingIngredientsTitle}>Missing Ingredients:</Text>
+                <View style={[styles.missingIngredientsContainer, { borderTopColor: theme.colors.outline }]}>
+                  <Text variant="bodyMedium" style={[styles.missingIngredientsTitle, { color: theme.colors.error }]}>
+                    Missing Ingredients:
+                  </Text>
                   {recipe.missingIngredients.map((item, idx) => (
-                    <Text key={idx} variant="bodyMedium" style={styles.missingIngredientText}>
+                    <Text key={idx} variant="bodyMedium" style={[styles.missingIngredientText, { color: theme.colors.error }]}>
                       • {item.name}{item.amount ? `: ${item.amount}` : ''}{item.unit ? ` ${item.unit}` : ''}
                     </Text>
                   ))}
@@ -201,20 +229,20 @@ export default function RecipesScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.colors.surface }]}>
         <View style={styles.backButtonContainer}>
           <IconButton
             icon="arrow-left"
             size={24}
-            iconColor="#000000"
+            iconColor={theme.colors.onSurface}
             onPress={() => router.back()}
             style={styles.backButton}
           />
         </View>
         <Text 
           variant="headlineMedium" 
-          style={styles.centeredTitle}
+          style={[styles.centeredTitle, { color: theme.colors.onSurface }]}
         >
           {mode === 'strict'
             ? 'Recipes with All Ingredients'
@@ -227,7 +255,7 @@ export default function RecipesScreen() {
             <IconButton
               icon="cog"
               size={24}
-              iconColor="#000000"
+              iconColor={theme.colors.onSurface}
               onPress={() => router.push('/ai-recipe-settings')}
               style={styles.settingsButton}
             />
@@ -236,7 +264,7 @@ export default function RecipesScreen() {
       </View>
 
       <ScrollView 
-        style={styles.content}
+        style={[styles.content, { backgroundColor: theme.colors.background }]}
         contentContainerStyle={styles.contentContainer}
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
@@ -252,31 +280,31 @@ export default function RecipesScreen() {
               <IconButton 
                 icon="robot" 
                 size={64} 
-                iconColor="#1976D2"
-                style={styles.aiIcon}
+                iconColor={theme.colors.primary}
+                style={[styles.aiIcon, { backgroundColor: theme.colors.primaryContainer }]}
               />
             </View>
             <Text 
               variant="headlineSmall" 
-              style={styles.comingSoonTitle}
+              style={[styles.comingSoonTitle, { color: theme.colors.primary }]}
             >
               Coming Soon!
             </Text>
             <Text 
               variant="bodyLarge" 
-              style={styles.emptyStateText}
+              style={[styles.emptyStateText, { color: theme.colors.onSurface }]}
             >
               AI Recipe Generation
             </Text>
             <Text 
               variant="bodyMedium" 
-              style={styles.emptyStateSubtext}
+              style={[styles.emptyStateSubtext, { color: theme.colors.onSurfaceVariant }]}
             >
               We're working hard to bring you intelligent recipe suggestions powered by artificial intelligence.
             </Text>
             <Text 
               variant="bodyMedium" 
-              style={styles.emptyStateSubtext}
+              style={[styles.emptyStateSubtext, { color: theme.colors.onSurfaceVariant }]}
             >
               For now, try searching recipes with your pantry ingredients using the "Find Recipes" option.
             </Text>
@@ -287,13 +315,13 @@ export default function RecipesScreen() {
           <View style={styles.emptyState}>
             <Text 
               variant="bodyLarge" 
-              style={styles.emptyStateText}
+              style={[styles.emptyStateText, { color: theme.colors.onSurface }]}
             >
               No recipes found
             </Text>
             <Text 
               variant="bodyMedium" 
-              style={styles.emptyStateSubtext}
+              style={[styles.emptyStateSubtext, { color: theme.colors.onSurfaceVariant }]}
             >
               Try adding more ingredients to your pantry
             </Text>
@@ -307,14 +335,12 @@ export default function RecipesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
     paddingTop: 60,
-    backgroundColor: '#FFFFFF',
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -335,18 +361,16 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     textAlign: 'center',
-    color: '#000000',
     fontWeight: '700',
-    paddingLeft: 80, // Padding only on left to prevent overlap with back button
-    paddingRight: 20, // Minimal padding on right
+    paddingLeft: 80,
+    paddingRight: 20,
   },
   centeredTitle: {
     flex: 1,
     textAlign: 'center',
-    color: '#000000',
     fontWeight: '700',
-    paddingLeft: 0, // No left padding for centered title
-    paddingRight: 0, // No right padding for centered title
+    paddingLeft: 0,
+    paddingRight: 0,
   },
   rightButtonContainer: {
     position: 'absolute',
@@ -370,24 +394,20 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
   },
   contentContainer: {
     padding: 16,
   },
   recipeCard: {
     marginBottom: 12,
-    backgroundColor: '#FFFFFF',
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    // Add hover effect for better UX
     transform: [{ scale: 1 }],
   },
   comingSoonCard: {
-    backgroundColor: '#F8F9FA',
     borderColor: '#1976D2',
     borderWidth: 2,
   },
@@ -399,22 +419,18 @@ const styles = StyleSheet.create({
   },
   recipeTitle: {
     flex: 1,
-    color: '#000000',
     fontWeight: '600',
-    marginRight: 8, // Add some space between title and confidence
+    marginRight: 8,
   },
   comingSoonTitle: {
-    color: '#1976D2',
     fontWeight: '700',
   },
   confidenceContainer: {
-    backgroundColor: '#1976D2',
     borderRadius: 12,
     paddingVertical: 4,
     paddingHorizontal: 8,
   },
   confidenceText: {
-    color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 12,
   },
@@ -423,47 +439,38 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   recipeDetail: {
-    color: '#333333',
     marginRight: 16,
   },
   recipeNutrition: {
-    backgroundColor: '#F0F0F0',
     padding: 12,
     borderRadius: 8,
     marginBottom: 12,
   },
   nutritionText: {
-    color: '#333333',
   },
   recipeIngredients: {
     marginTop: 8,
   },
   ingredientsTitle: {
-    color: '#000000',
     fontWeight: '600',
     marginBottom: 8,
   },
   ingredientText: {
-    color: '#333333',
     marginBottom: 4,
   },
   ingredientInPantry: {
-    color: '#4CAF50',
     fontWeight: '500',
   },
   missingIngredientsContainer: {
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
   },
   missingIngredientsTitle: {
-    color: '#FF5722',
     fontWeight: '600',
     marginBottom: 8,
   },
   missingIngredientText: {
-    color: '#FF5722',
     marginBottom: 4,
   },
   emptyState: {
@@ -473,13 +480,11 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   emptyStateText: {
-    color: '#000000',
     marginBottom: 8,
     textAlign: 'center',
     fontWeight: '600',
   },
   emptyStateSubtext: {
-    color: '#333333',
     textAlign: 'center',
     fontWeight: '500',
   },
@@ -487,7 +492,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   aiIcon: {
-    backgroundColor: '#F0F8FF',
     borderRadius: 50,
   },
   viewRecipeContainer: {
@@ -497,10 +501,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
   },
   viewRecipeText: {
-    color: '#1976D2',
     fontWeight: '500',
   },
   viewRecipeIcon: {

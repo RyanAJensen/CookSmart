@@ -42,7 +42,7 @@ export default function CustomTabBar() {
         onPress={() => router.push('/')}
         style={styles.button}
         labelStyle={[
-          isActive('/') ? styles.activeLabel : styles.label, 
+          isActive('/') ? [styles.activeLabel, { color: paperTheme.colors.primary }] : [styles.label, { color: paperTheme.colors.onSurfaceVariant }], 
           styles.buttonLabel
         ]}
       >
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     fontSize: BUTTON_FONT_SIZE,
   },
   activeLabel: {
-    // Color handled by theme
+    fontSize: BUTTON_FONT_SIZE,
   },
   buttonLabel: {
     fontSize: BUTTON_FONT_SIZE,

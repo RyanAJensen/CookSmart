@@ -20,30 +20,31 @@ function safeParseJSON(data: any) {
 }
 
 function renderField(field: any, styles: any) {
+  const theme = styles.theme;
   if (Array.isArray(field) && field.length > 0) {
     return field.map((item, idx) => {
       if (typeof item === 'object' && item !== null && 'name' in item) {
         return (
-          <Text key={idx} variant="bodyMedium" style={styles.ingredientText}>
+          <Text key={idx} variant="bodyMedium" style={[styles.ingredientText, { color: theme.colors.onSurfaceVariant }]}>
             • {item.name}{item.amount ? `: ${item.amount}` : ''}{item.unit ? ` ${item.unit}` : ''}
           </Text>
         );
       }
       return (
-        <Text key={idx} variant="bodyMedium" style={styles.ingredientText}>
+        <Text key={idx} variant="bodyMedium" style={[styles.ingredientText, { color: theme.colors.onSurfaceVariant }]}>
           {typeof item === 'object' ? JSON.stringify(item) : String(item)}
         </Text>
       );
     });
   } else if (typeof field === 'object' && field !== null) {
     return (
-      <Text variant="bodyMedium" style={styles.ingredientText}>
+      <Text variant="bodyMedium" style={[styles.ingredientText, { color: theme.colors.onSurfaceVariant }]}>
         {JSON.stringify(field)}
       </Text>
     );
   } else if (typeof field === 'string') {
     return (
-      <Text variant="bodyMedium" style={styles.ingredientText}>
+      <Text variant="bodyMedium" style={[styles.ingredientText, { color: theme.colors.onSurfaceVariant }]}>
         {field}
       </Text>
     );
@@ -84,60 +85,79 @@ export default function SavedRecipesScreen() {
     const instructions = safeParseJSON(recipe.instructions);
 
     return (
-      <Card key={recipe.id} style={styles.recipeCard} mode="outlined" onPress={() => router.push({ pathname: '/recipe-detail', params: { recipe: JSON.stringify(recipe) } })}>
+      <Card 
+        key={recipe.id} 
+        style={[styles.recipeCard, { backgroundColor: theme.colors.surface }]} 
+        mode="outlined" 
+        onPress={() => router.push({ pathname: '/recipe-detail', params: { recipe: JSON.stringify(recipe) } })}
+      >
         <Card.Content>
           <View style={styles.recipeHeader}>
-            <Text variant="titleMedium" style={styles.recipeTitle}>{recipe.title}</Text>
+            <Text variant="titleMedium" style={[styles.recipeTitle, { color: theme.colors.onSurface }]}>
+              {recipe.title}
+            </Text>
             {recipe.confidenceScore !== undefined && (
-              <View style={styles.confidenceContainer}>
-                <Text style={styles.confidenceText}>AI Confidence: {recipe.confidenceScore}/100</Text>
+              <View style={[styles.confidenceContainer, { backgroundColor: theme.colors.primary }]}>
+                <Text style={[styles.confidenceText, { color: theme.colors.onPrimary }]}>
+                  AI Confidence: {recipe.confidenceScore}/100
+                </Text>
               </View>
             )}
           </View>
           <View style={styles.recipeInfo}>
-            <Text variant="bodyMedium" style={styles.recipeDetail}>{recipe.readyInMinutes} mins</Text>
-            <Text variant="bodyMedium" style={styles.recipeDetail}>{recipe.servings} servings</Text>
+            <Text variant="bodyMedium" style={[styles.recipeDetail, { color: theme.colors.onSurfaceVariant }]}>
+              {recipe.readyInMinutes} mins
+            </Text>
+            <Text variant="bodyMedium" style={[styles.recipeDetail, { color: theme.colors.onSurfaceVariant }]}>
+              {recipe.servings} servings
+            </Text>
           </View>
           {recipe.calories && (
-            <View style={styles.recipeNutrition}>
-              <Text variant="bodyMedium" style={styles.nutritionText}>
+            <View style={[styles.recipeNutrition, { backgroundColor: theme.colors.surfaceVariant }]}>
+              <Text variant="bodyMedium" style={[styles.nutritionText, { color: theme.colors.onSurfaceVariant }]}>
                 Calories: {recipe.calories}
               </Text>
-              <Text variant="bodyMedium" style={styles.nutritionText}>
+              <Text variant="bodyMedium" style={[styles.nutritionText, { color: theme.colors.onSurfaceVariant }]}>
                 Protein: {recipe.protein || 0}g
               </Text>
-              <Text variant="bodyMedium" style={styles.nutritionText}>
+              <Text variant="bodyMedium" style={[styles.nutritionText, { color: theme.colors.onSurfaceVariant }]}>
                 Carbs: {recipe.carbs || 0}g
               </Text>
-              <Text variant="bodyMedium" style={styles.nutritionText}>
+              <Text variant="bodyMedium" style={[styles.nutritionText, { color: theme.colors.onSurfaceVariant }]}>
                 Fat: {recipe.fat || 0}g
               </Text>
             </View>
           )}
           <View style={styles.recipeIngredients}>
-            <Text variant="bodyMedium" style={styles.ingredientsTitle}>Ingredients:</Text>
-            {renderField(ingredients, styles)}
+            <Text variant="bodyMedium" style={[styles.ingredientsTitle, { color: theme.colors.onSurface }]}>
+              Ingredients:
+            </Text>
+            {renderField(ingredients, { ...styles, theme })}
           </View>
-          <View style={styles.viewRecipeContainer}>
-            <Text variant="bodyMedium" style={styles.viewRecipeText}>
+          <View style={[styles.viewRecipeContainer, { borderTopColor: theme.colors.outline }]}>
+            <Text variant="bodyMedium" style={[styles.viewRecipeText, { color: theme.colors.primary }]}>
               Tap to view full recipe
             </Text>
             <IconButton
               icon="chevron-right"
               size={16}
-              iconColor="#1976D2"
+              iconColor={theme.colors.primary}
               style={styles.viewRecipeIcon}
             />
           </View>
           <View style={{ marginTop: 12 }}>
-            <Text variant="bodyMedium" style={styles.ingredientsTitle}>Instructions:</Text>
-            {renderField(instructions, styles)}
+            <Text variant="bodyMedium" style={[styles.ingredientsTitle, { color: theme.colors.onSurface }]}>
+              Instructions:
+            </Text>
+            {renderField(instructions, { ...styles, theme })}
           </View>
           {recipe.missingIngredients && recipe.missingIngredients.length > 0 && (
-            <View style={styles.missingIngredientsContainer}>
-              <Text variant="bodyMedium" style={styles.missingIngredientsTitle}>Missing Ingredients:</Text>
+            <View style={[styles.missingIngredientsContainer, { borderTopColor: theme.colors.outline }]}>
+              <Text variant="bodyMedium" style={[styles.missingIngredientsTitle, { color: theme.colors.error }]}>
+                Missing Ingredients:
+              </Text>
               {recipe.missingIngredients.map((item, idx) => (
-                <Text key={idx} variant="bodyMedium" style={styles.missingIngredientText}>
+                <Text key={idx} variant="bodyMedium" style={[styles.missingIngredientText, { color: theme.colors.error }]}>
                   • {item.name}{item.amount ? `: ${item.amount}` : ''}{item.unit ? ` ${item.unit}` : ''}
                 </Text>
               ))}
@@ -149,20 +169,20 @@ export default function SavedRecipesScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.colors.surface }]}>
         <View style={styles.backButtonContainer}>
           <IconButton
             icon="arrow-left"
             size={24}
-            iconColor="#000000"
+            iconColor={theme.colors.onSurface}
             onPress={() => router.back()}
             style={styles.backButton}
           />
         </View>
         <Text 
           variant="headlineMedium" 
-          style={styles.title}
+          style={[styles.title, { color: theme.colors.onSurface }]}
         >
           Saved Recipes
         </Text>
@@ -170,7 +190,7 @@ export default function SavedRecipesScreen() {
           <IconButton
             icon="cog"
             size={24}
-            iconColor="#000000"
+            iconColor={theme.colors.onSurface}
             onPress={() => router.push('/ai-recipe-settings')}
             style={styles.settingsButton}
           />
@@ -178,14 +198,14 @@ export default function SavedRecipesScreen() {
       </View>
 
       <ScrollView 
-        style={styles.content}
+        style={[styles.content, { backgroundColor: theme.colors.background }]}
         contentContainerStyle={styles.contentContainer}
       >
         {isLoading ? (
           <View style={styles.emptyState}>
             <Text 
               variant="bodyLarge" 
-              style={styles.emptyStateText}
+              style={[styles.emptyStateText, { color: theme.colors.onSurface }]}
             >
               Loading saved recipes...
             </Text>
@@ -196,15 +216,15 @@ export default function SavedRecipesScreen() {
           <View style={styles.emptyState}>
             <Text 
               variant="bodyLarge" 
-              style={styles.emptyStateText}
+              style={[styles.emptyStateText, { color: theme.colors.onSurface }]}
             >
-              No saved recipes yet.
+              No saved recipes
             </Text>
             <Text 
               variant="bodyMedium" 
-              style={styles.emptyStateSubtext}
+              style={[styles.emptyStateSubtext, { color: theme.colors.onSurfaceVariant }]}
             >
-              Save your favorite AI-generated recipes from the detail screen!
+              Save your favorite recipes to view them here
             </Text>
           </View>
         )}
@@ -216,19 +236,18 @@ export default function SavedRecipesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
     paddingTop: 60,
-    backgroundColor: '#FFFFFF',
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
+    minHeight: 100,
   },
   backButtonContainer: {
     position: 'absolute',
@@ -243,19 +262,30 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     textAlign: 'center',
-    color: '#000000',
     fontWeight: '700',
+    paddingLeft: 80,
+    paddingRight: 80,
+  },
+  rightButtonContainer: {
+    position: 'absolute',
+    right: 16,
+    top: 60,
+    zIndex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  settingsButton: {
+    marginRight: 8,
+    backgroundColor: 'transparent',
   },
   content: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
   },
   contentContainer: {
     padding: 16,
   },
   recipeCard: {
     marginBottom: 12,
-    backgroundColor: '#FFFFFF',
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -270,63 +300,52 @@ const styles = StyleSheet.create({
   },
   recipeTitle: {
     flex: 1,
-    color: '#000000',
     fontWeight: '600',
     marginRight: 8,
+  },
+  confidenceContainer: {
+    borderRadius: 12,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
+  confidenceText: {
+    fontWeight: 'bold',
+    fontSize: 12,
   },
   recipeInfo: {
     flexDirection: 'row',
     marginBottom: 8,
   },
   recipeDetail: {
-    color: '#333333',
     marginRight: 16,
   },
-  confidenceContainer: {
-    backgroundColor: '#1976D2',
-    borderRadius: 12,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  confidenceText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 12,
-  },
   recipeNutrition: {
-    backgroundColor: '#F0F0F0',
     padding: 12,
     borderRadius: 8,
     marginBottom: 12,
   },
   nutritionText: {
-    color: '#333333',
   },
   recipeIngredients: {
     marginTop: 8,
   },
   ingredientsTitle: {
-    color: '#000000',
     fontWeight: '600',
     marginBottom: 8,
   },
   ingredientText: {
-    color: '#333333',
     marginBottom: 4,
   },
   missingIngredientsContainer: {
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
   },
   missingIngredientsTitle: {
-    color: '#FF5722',
     fontWeight: '600',
     marginBottom: 8,
   },
   missingIngredientText: {
-    color: '#FF5722',
     marginBottom: 4,
   },
   emptyState: {
@@ -336,13 +355,11 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   emptyStateText: {
-    color: '#000000',
     marginBottom: 8,
     textAlign: 'center',
     fontWeight: '600',
   },
   emptyStateSubtext: {
-    color: '#333333',
     textAlign: 'center',
     fontWeight: '500',
   },
@@ -353,27 +370,11 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
   },
   viewRecipeText: {
-    color: '#1976D2',
     fontWeight: '500',
   },
   viewRecipeIcon: {
-    margin: 0,
-    backgroundColor: 'transparent',
-  },
-  rightButtonContainer: {
-    position: 'absolute',
-    right: 16,
-    top: 60,
-    zIndex: 1,
-  },
-  settingsButton: {
-    margin: 0,
-    backgroundColor: 'transparent',
-  },
-  aiTestButton: {
     margin: 0,
     backgroundColor: 'transparent',
   },

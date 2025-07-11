@@ -2,8 +2,6 @@
 
 <div align="center">
 
-![CookSmart Logo](assets/images/icon.png)
-
 **Your personal pantry assistant powered by AI**
 
 [![React Native](https://img.shields.io/badge/React%20Native-0.79.3-blue.svg)](https://reactnative.dev/)

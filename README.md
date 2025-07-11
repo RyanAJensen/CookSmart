@@ -25,12 +25,16 @@
 - **🌙 Dark/Light Theme**: Beautiful theme system with smooth transitions
 - **📱 Modern UI**: Material Design 3 components with custom theming
 
-### 🤖 AI Features (Coming Soon)
+### 🤖 AI Features (Coming Soon!)
+*Get ready for the future of recipe creation!*
+
 - **🧠 Smart Ingredient Analysis**: AI will analyze your pantry ingredients and suggest complementary items
 - **👤 Personalized Recipes**: Create recipes based on your cooking preferences and dietary restrictions
 - **📊 Nutrition Estimation**: Provide accurate nutrition information
 - **📝 Step-by-Step Instructions**: Generate clear, actionable cooking steps
 - **🎯 Confidence Scoring**: Show how well the recipe matches your available ingredients
+
+*We're working hard to bring you intelligent recipe suggestions powered by artificial intelligence!*
 
 ---
 
@@ -69,22 +73,6 @@
 - **Loading States**: Proper loading indicators throughout
 - **Error Handling**: Graceful error handling with user-friendly messages
 - **Accessibility**: Built with accessibility in mind
-
----
-
-## 📱 Screenshots
-
-<div align="center">
-
-| Home Screen | Pantry Management | Recipe Search |
-|-------------|------------------|---------------|
-| ![Home](screenshots/home.png) | ![Pantry](screenshots/pantry.png) | ![Recipes](screenshots/recipes.png) |
-
-| Recipe Details | Barcode Scanner | Settings |
-|----------------|-----------------|----------|
-| ![Details](screenshots/recipe-detail.png) | ![Scanner](screenshots/scanner.png) | ![Settings](screenshots/settings.png) |
-
-</div>
 
 ---
 

@@ -35,6 +35,7 @@ export interface Recipe {
   tags: string[];
   confidenceScore?: number;
   missingIngredients?: IngredientItem[];
+  matchScore?: number;
 }
 
 export interface UserPreferences {

@@ -7,6 +7,7 @@ import { Ingredient } from '../../types';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../contexts/ThemeContext';
 import AnimatedThemeToggle from '../../components/AnimatedThemeToggle';
+import CookSmartLogo, { CookSmartBrand } from '../../components/CookSmartLogo';
 
 export default function Page() {
   const paperTheme = usePaperTheme();
@@ -105,9 +106,11 @@ export default function Page() {
     <ScrollView style={[styles.container, { backgroundColor: paperTheme.colors.background }]}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <Text variant="displaySmall" style={[styles.title, { color: paperTheme.colors.primary }]}>
-            CookSmart
-          </Text>
+          <CookSmartBrand 
+            size="large" 
+            variant="vertical" 
+            style={styles.brandContainer}
+          />
           <Text variant="bodyLarge" style={[styles.subtitle, { color: paperTheme.colors.onSurface }]}>
             Your personal pantry assistant
           </Text>
@@ -276,6 +279,9 @@ const styles = StyleSheet.create({
   headerContent: {
     flex: 1,
     alignItems: 'center',
+  },
+  brandContainer: {
+    marginBottom: 8,
   },
   themeToggle: {
     position: 'absolute',

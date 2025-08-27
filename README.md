@@ -1,162 +1,73 @@
-# 🍳 CookSmart - Smart Recipe Generator
+# CookSmart
 
-<div align="center">
+A React Native app for managing your pantry and finding recipes based on available ingredients.
 
-**Your personal pantry assistant powered by AI**
+## Features
 
-[![React Native](https://img.shields.io/badge/React%20Native-0.79.3-blue.svg)](https://reactnative.dev/)
-[![Expo](https://img.shields.io/badge/Expo-53.0.0-blue.svg)](https://expo.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.1.3-blue.svg)](https://www.typescriptlang.org/)
+- **Pantry Management**: Add, edit, and organize your ingredients
+- **Recipe Search**: Find recipes based on ingredients in your pantry
+- **Recipe Download**: Search and download recipes from the internet
+- **Nutrition Tracking**: Track calories, protein, carbs, and fat
+- **Offline Support**: Store recipes locally for offline access
 
-*A React Native/Expo app that helps you create delicious recipes from ingredients in your pantry*
+## Recipe Sources
 
-</div>
+The app searches for recipes from multiple sources:
 
----
+1. **Spoonacular API** - Professional recipe database
+2. **Edamam API** - Nutrition-focused recipe database  
+3. **AllRecipes** - Popular recipe website
+4. **Food Network** - Professional cooking website
 
-## 🚀 Features
+## API Keys Setup
 
-### ✨ Current Features
-- **📱 Cross-Platform**: Works seamlessly on iOS and Android
-- **📊 Pantry Management**: Track ingredients with barcode scanning and manual entry
-- **🔍 Recipe Search**: Find recipes using all or some of your ingredients
-- **📈 Nutrition Tracking**: Get detailed nutrition information for recipes
-- **💾 Recipe Saving**: Save your favorite recipes for later
-- **🌙 Dark/Light Theme**: Beautiful theme system with smooth transitions
-- **📱 Modern UI**: Material Design 3 components with custom theming
+To enable full recipe searching functionality, you'll need to get free API keys:
 
-### 🤖 AI Features (Coming Soon!)
-*Get ready for the future of recipe creation!*
+### Spoonacular API
+1. Go to [Spoonacular](https://spoonacular.com/food-api)
+2. Sign up for a free account
+3. Get your API key
+4. Add to your environment: `SPOONACULAR_API_KEY=your_key_here`
 
-- **🧠 Smart Ingredient Analysis**: AI will analyze your pantry ingredients and suggest complementary items
-- **👤 Personalized Recipes**: Create recipes based on your cooking preferences and dietary restrictions
-- **📊 Nutrition Estimation**: Provide accurate nutrition information
-- **📝 Step-by-Step Instructions**: Generate clear, actionable cooking steps
-- **🎯 Confidence Scoring**: Show how well the recipe matches your available ingredients
+### Edamam API
+1. Go to [Edamam](https://developer.edamam.com/)
+2. Sign up for a free account
+3. Create an application to get App ID and App Key
+4. Add to your environment: `EDAMAM_APP_ID=your_app_id` and `EDAMAM_APP_KEY=your_app_key`
 
-*We're working hard to bring you intelligent recipe suggestions powered by artificial intelligence!*
+## Installation
 
----
-
-## 🛠️ Technology Stack
-
-### Core Technologies
-- **React Native 0.79.3** - Cross-platform mobile development
-- **Expo SDK 53** - Development platform and tools
-- **TypeScript 5.1.3** - Type-safe JavaScript
-- **React Native Paper** - Material Design 3 components
-
-### Key Libraries
-- **Expo Router** - File-based navigation
-- **Expo SQLite** - Local database storage
-- **Expo Camera** - Barcode scanning functionality
-- **React Native Reanimated** - Smooth animations
-- **Axios** - HTTP client for API calls
-
-### External APIs
-- **Open Food Facts** - Product database for barcode scanning
-- **AI Integration** - Coming soon!
-
----
-
-## 🎨 Design & UX
-
-### Theme System
-- **Light Theme**: Warm orange primary color (#FF6B35) with warm backgrounds
-- **Dark Theme**: Green primary color (#4CAF50) with dark surfaces
-- **Smooth Transitions**: Animated theme switching with overlay effects
-- **System Integration**: Respects device theme preferences
-
-### User Experience
-- **Intuitive Navigation**: File-based routing with Expo Router
-- **Responsive Design**: Works on phones and tablets
-- **Loading States**: Proper loading indicators throughout
-- **Error Handling**: Graceful error handling with user-friendly messages
-- **Accessibility**: Built with accessibility in mind
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- Expo CLI
-- iOS Simulator (for iOS development) or Android Studio (for Android development)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/RyanAJensen/CookSmart.git
-   cd cooksmart
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npx expo start
-   ```
-
-4. **Run on your device**
-   - Scan the QR code with the Expo Go app
-   - Or press `i` for iOS simulator or `a` for Android emulator
-
-### Development Commands
 ```bash
-npm start          # Start Expo development server
-npm run android    # Run on Android
-npm run ios        # Run on iOS
-npm run web        # Run on web
-npm run lint       # Run ESLint
-npm run type-check # Run TypeScript type checking
+npm install
 ```
 
----
+## Running the App
 
-## 🏗️ Project Structure
-
-```
-CookSmart/
-├── app/                    # Main application screens (Expo Router)
-│   ├── (tabs)/            # Tab-based navigation
-│   │   ├── index.tsx      # Home screen
-│   │   └── pantry.tsx     # Pantry management
-│   ├── (modals)/          # Modal screens
-│   │   ├── scan.tsx       # Barcode scanner
-│   │   ├── food-details.tsx # Product details
-│   │   └── type-ingredient.tsx # Manual ingredient entry
-│   ├── recipes.tsx        # Recipe search
-│   ├── saved-recipes.tsx  # Saved recipes
-│   └── ai-recipe-settings.tsx # AI preferences
-├── components/            # Reusable UI components
-├── services/             # Business logic and API calls
-├── contexts/             # React Context providers
-├── hooks/                # Custom React hooks
-├── types/                # TypeScript type definitions
-├── utils/                # Helper functions
-└── assets/               # Images and static assets
+```bash
+npm start
 ```
 
----
+## How It Works
 
-## 🙏 Acknowledgments
+1. **Add ingredients** to your pantry
+2. **Search recipes** - the app finds recipes that use your ingredients
+3. **Search & Download** - find recipes from the internet based on your ingredients
+4. **Bulk Download** - download many recipes at once for offline use
 
-This project was developed with assistance from AI tools:
+The app prioritizes recipes that best match your available ingredients and shows match percentages to help you choose the best recipes.
 
-- **🤖 ChatGPT** - Used for code generation, debugging, and architectural decisions
-- **💻 Cursor** - Primary IDE with AI-powered code completion and refactoring
+## Setup for AI Recipe Generation
 
----
+To use the AI recipe generation feature:
 
-<div align="center">
+1. **Get a Hugging Face API key** from [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
+2. **Run the setup script**: `./scripts/setup-env.sh`
+3. **Add your API key** to the generated `.env` file
+4. **Restart the app**: `npx expo start --clear`
 
-**Made with ❤️ and 🤖 AI assistance**
+Or manually create a `.env` file in the project root:
+```bash
+EXPO_PUBLIC_HUGGINGFACE_API_KEY=your_api_key_here
+```
 
-*Built for food lovers, by a food lover*
-
-</div> 
+See [SETUP_API_KEYS.md](SETUP_API_KEYS.md) for detailed instructions. 

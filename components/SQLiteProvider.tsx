@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { initDatabase } from '../services/database';
+import { getRecipeCount } from '../services/recipeStorage';
+import { populateCommonRecipes } from '../services/recipeDownloader';
 
 // Create context
 export const SQLiteContext = createContext<{
@@ -22,6 +24,10 @@ export function SQLiteProvider({ children }: { children: React.ReactNode }) {
     const initializeDatabase = async () => {
       try {
         await initDatabase();
+        const count = await getRecipeCount();
+        if (count === 0) {
+          await populateCommonRecipes(500); // Fill with 500 common recipes
+        }
         setIsReady(true);
       } catch (err) {
         console.error('Failed to initialize database:', err);

@@ -202,6 +202,7 @@ export default function FoodDetailsScreen() {
       added_at: new Date().toISOString(),
     };
     await addIngredient(ingredient);
+    
     setAdding(false);
     setAdded(true);
     setTimeout(() => {

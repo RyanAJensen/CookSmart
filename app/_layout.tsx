@@ -95,6 +95,12 @@ function AppContent() {
                 headerShown: false
               }} 
             />
+            <Stack.Screen 
+              name="recipe-download" 
+              options={{ 
+                headerShown: false
+              }} 
+            />
           </Stack>
         </View>
         <CustomTabBar />
